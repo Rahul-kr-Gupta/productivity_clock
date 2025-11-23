@@ -1,71 +1,98 @@
-import React, { useState, useEffect } from 'react';
-import Timer from './components/Timer';
-import KnowledgePool from './components/KnowledgePool';
-import RewardNotification from './components/RewardNotification';
+import React from 'react';
+import { ProductivityProvider, useProductivity } from './context/ProductivityContext';
+import Navigation from './components/Navigation';
+import TimerView from './components/TimerView';
+import StatsPanel from './components/Stats/StatsPanel';
+import GoalsPanel from './components/Goals/GoalsPanel';
+import AchievementsPanel from './components/Achievements/AchievementsPanel';
+import SettingsPanel from './components/Settings/SettingsPanel';
+import './App.css';
 
-function App() {
-  const [time, setTime] = useState(0); // Time in seconds
-  const [isRunning, setIsRunning] = useState(false);
-  const [coins, setCoins] = useState(0);
-  const [showReward, setShowReward] = useState(false);
+function AppContent() {
+  const { currentView, showAchievementNotification, newAchievements, setShowAchievementNotification } = useProductivity();
 
-  // Timer Logic
-  useEffect(() => {
-    let interval = null;
-    if (isRunning) {
-      interval = setInterval(() => {
-        setTime((prevTime) => prevTime + 1);
-      }, 1000);
-    } else {
-      clearInterval(interval);
+  const renderView = () => {
+    switch (currentView) {
+      case 'timer':
+        return <TimerView />;
+      case 'stats':
+        return <StatsPanel />;
+      case 'goals':
+        return <GoalsPanel />;
+      case 'achievements':
+        return <AchievementsPanel />;
+      case 'settings':
+        return <SettingsPanel />;
+      default:
+        return <TimerView />;
     }
-    return () => clearInterval(interval);
-  }, [isRunning]);
-
-  // Gamification Logic: 1 coin every 10 minutes (600 seconds)
-  useEffect(() => {
-    if (time > 0 && time % 600 === 0) {
-      setCoins((prev) => prev + 1);
-      setShowReward(true);
-      setTimeout(() => setShowReward(false), 3000);
-    }
-  }, [time]);
+  };
 
   return (
-    <div style={{ display: 'flex', height: '100vh', width: '100vw', position: 'relative' }}>
-      {/* Left Side: Timer */}
-      <div style={{
-        flex: 1,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        position: 'relative'
-      }}>
-        <Timer time={time} isRunning={isRunning} setIsRunning={setIsRunning} setTime={setTime} />
+    <div style={{ height: '100vh', width: '100vw', display: 'flex', flexDirection: 'column' }}>
+      <Navigation />
+      <div style={{ flex: 1, overflow: 'auto' }}>
+        {renderView()}
       </div>
 
-      {/* Enhanced Divider with Glow */}
-      <div style={{
-        width: '1px',
-        height: '100%',
-        background: 'linear-gradient(to bottom, transparent, var(--gradient-primary), transparent)',
-        boxShadow: '0 0 20px rgba(56, 189, 248, 0.3)',
-        position: 'relative'
-      }} />
-
-      {/* Right Side: Knowledge Visualization */}
-      <div style={{
-        flex: 1,
-        position: 'relative',
-        overflow: 'hidden',
-        background: 'var(--bg-secondary)'
-      }}>
-        <KnowledgePool time={time} coins={coins} />
-      </div>
-
-      {/* Reward Notification */}
-      {showReward && <RewardNotification />}
+      {/* Achievement Unlock Notification */}
+      {showAchievementNotification && newAchievements.length > 0 && (
+        <div style={{
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          background: 'rgba(26, 31, 58, 0.95)',
+          backdropFilter: 'blur(20px)',
+          padding: '2.5rem 4rem',
+          borderRadius: '25px',
+          border: '2px solid var(--accent-color)',
+          boxShadow: '0 0 60px rgba(56, 189, 248, 0.4)',
+          zIndex: 10000,
+          animation: 'bounce-in 0.6s ease',
+          textAlign: 'center',
+          minWidth: '400px'
+        }}>
+          <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>
+            {newAchievements[0].icon}
+          </div>
+          <div style={{
+            fontSize: '1.2rem',
+            color: 'var(--text-secondary)',
+            marginBottom: '0.5rem',
+            letterSpacing: '2px',
+            textTransform: 'uppercase'
+          }}>
+            Achievement Unlocked!
+          </div>
+          <div style={{
+            fontSize: '2rem',
+            fontWeight: '800',
+            background: 'var(--gradient-primary)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            marginBottom: '1rem'
+          }}>
+            {newAchievements[0].title}
+          </div>
+          <div style={{
+            color: 'var(--text-secondary)',
+            fontSize: '1rem'
+          }}>
+            {newAchievements[0].description}
+          </div>
+        </div>
+      )}
     </div>
+  );
+}
+
+function App() {
+  return (
+    <ProductivityProvider>
+      <AppContent />
+    </ProductivityProvider>
   );
 }
 
