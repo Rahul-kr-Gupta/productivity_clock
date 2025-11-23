@@ -230,16 +230,12 @@ button {
 
 @keyframes bounce-in {
   0% {
-    transform: translate(-50%, -50%) scale(0.3);
+    transform: translate(-50%, -50%) scale(0.5);
     opacity: 0;
   }
 
   50% {
-    transform: translate(-50%, -50%) scale(1.05);
-  }
-
-  70% {
-    transform: translate(-50%, -50%) scale(0.9);
+    transform: translate(-50%, -50%) scale(1.1);
   }
 
   100% {
@@ -294,4 +290,31 @@ button {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  body {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  /* Reduce font sizes on mobile */
+  h1 {
+    font-size: 1.75rem !important;
+  }
+
+  h2 {
+    font-size: 1.5rem !important;
+  }
+
+  h3 {
+    font-size: 1.25rem !important;
+  }
+
+  /* Make buttons touch-friendly */
+  button {
+    min-height: 44px;
+    min-width: 44px;
+  }
 }

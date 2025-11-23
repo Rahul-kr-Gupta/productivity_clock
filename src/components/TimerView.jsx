@@ -23,6 +23,13 @@ const TimerView = () => {
     const [ripples, setRipples] = useState([]);
     const [coins, setCoins] = useState(0);
     const [showReward, setShowReward] = useState(false);
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     // Timer logic
     useEffect(() => {
@@ -152,7 +159,7 @@ const TimerView = () => {
     return (
         <div style={{
             display: 'flex',
-            flexDirection: window.innerWidth > 968 ? 'row' : 'column',
+            flexDirection: isMobile ? 'column' : 'row',
             height: '100%',
             width: '100%'
         }}>
@@ -164,7 +171,7 @@ const TimerView = () => {
                 justifyContent: 'center',
                 alignItems: 'center',
                 position: 'relative',
-                padding: '2rem'
+                padding: isMobile ? '1rem' : '2rem'
             }}>
                 {/* Floating Particles */}
                 {particles.map(particle => (
@@ -254,7 +261,7 @@ const TimerView = () => {
 
                 {/* Timer Display */}
                 <div style={{
-                    fontSize: '6rem',
+                    fontSize: isMobile ? '3.5rem' : '6rem',
                     fontWeight: '800',
                     background: 'var(--gradient-primary)',
                     WebkitBackgroundClip: 'text',
@@ -333,7 +340,7 @@ const TimerView = () => {
                 )}
 
                 {/* Control Buttons */}
-                <div style={{ marginTop: '3rem', display: 'flex', gap: '1rem', justifyContent: 'center', zIndex: 2 }}>
+                <div style={{ marginTop: isMobile ? '2rem' : '3rem', display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: '1rem', justifyContent: 'center', zIndex: 2, width: isMobile ? '100%' : 'auto', maxWidth: isMobile ? '400px' : 'none' }}>
                     <button
                         onClick={(e) => {
                             createRipple(e, 'start');
@@ -354,8 +361,8 @@ const TimerView = () => {
                         style={{
                             position: 'relative',
                             overflow: 'hidden',
-                            padding: '1.2rem 3rem',
-                            fontSize: '1.2rem',
+                            padding: isMobile ? '1rem 2rem' : '1.2rem 3rem',
+                            fontSize: isMobile ? '1rem' : '1.2rem',
                             fontWeight: '600',
                             borderRadius: '50px',
                             background: isRunning
@@ -366,7 +373,8 @@ const TimerView = () => {
                             boxShadow: isRunning ? 'none' : '0 0 20px rgba(56, 189, 248, 0.4)',
                             backdropFilter: isRunning ? 'blur(10px)' : 'none',
                             transition: 'all 0.3s ease',
-                            cursor: 'pointer'
+                            cursor: 'pointer',
+                            width: isMobile ? '100%' : 'auto'
                         }}
                     >
                         {ripples.filter(r => r.buttonId === 'start').map(ripple => (
@@ -406,15 +414,16 @@ const TimerView = () => {
                         style={{
                             position: 'relative',
                             overflow: 'hidden',
-                            padding: '1.2rem 3rem',
-                            fontSize: '1.2rem',
+                            padding: isMobile ? '1rem 2rem' : '1.2rem 3rem',
+                            fontSize: isMobile ? '1rem' : '1.2rem',
                             fontWeight: '600',
                             borderRadius: '50px',
                             backgroundColor: 'transparent',
                             color: 'var(--text-secondary)',
                             border: '2px solid rgba(148, 163, 184, 0.4)',
                             transition: 'all 0.3s ease',
-                            cursor: 'pointer'
+                            cursor: 'pointer',
+                            width: isMobile ? '100%' : 'auto'
                         }}
                     >
                         ⏹ Stop & Save
@@ -497,10 +506,11 @@ const TimerView = () => {
 
             {/* Right: Knowledge Pool */}
             <div style={{
-                flex: 1,
+                flex: isMobile ? '0 0 auto' : 1,
                 position: 'relative',
                 overflow: 'hidden',
                 background: 'var(--bg-secondary)',
+                minHeight: isMobile ? '200px' : 'auto',
                 borderLeft: window.innerWidth > 968 ? '1px solid rgba(255, 255, 255, 0.1)' : 'none'
             }}>
                 <KnowledgePoolMini time={time} coins={stats.totalCoins + coins} />
