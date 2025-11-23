@@ -32,8 +32,8 @@ const TimerView = () => {
                 setTime((prevTime) => {
                     const newTime = prevTime + 1;
 
-                    // Check for coin rewards (every 10 minutes)
-                    if (newTime > 0 && newTime % 600 === 0) {
+                    // Check for coin rewards (every 30 seconds)
+                    if (newTime > 0 && newTime % 30 === 0) {
                         setCoins(prev => prev + 1);
                         setShowReward(true);
                         setTimeout(() => setShowReward(false), 3000);
@@ -365,7 +365,8 @@ const TimerView = () => {
                             border: isRunning ? '2px solid rgba(56, 189, 248, 0.3)' : 'none',
                             boxShadow: isRunning ? 'none' : '0 0 20px rgba(56, 189, 248, 0.4)',
                             backdropFilter: isRunning ? 'blur(10px)' : 'none',
-                            transition: 'all 0.3s ease'
+                            transition: 'all 0.3s ease',
+                            cursor: 'pointer'
                         }}
                     >
                         {ripples.filter(r => r.buttonId === 'start').map(ripple => (
@@ -412,7 +413,8 @@ const TimerView = () => {
                             backgroundColor: 'transparent',
                             color: 'var(--text-secondary)',
                             border: '2px solid rgba(148, 163, 184, 0.4)',
-                            transition: 'all 0.3s ease'
+                            transition: 'all 0.3s ease',
+                            cursor: 'pointer'
                         }}
                     >
                         ⏹ Stop & Save
