@@ -32,14 +32,34 @@ function App() {
   }, [time]);
 
   return (
-    <div style={{ display: 'flex', height: '100vh', width: '100vw' }}>
+    <div style={{ display: 'flex', height: '100vh', width: '100vw', position: 'relative' }}>
       {/* Left Side: Timer */}
-      <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', borderRight: '1px solid var(--bg-secondary)' }}>
+      <div style={{
+        flex: 1,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'relative'
+      }}>
         <Timer time={time} isRunning={isRunning} setIsRunning={setIsRunning} setTime={setTime} />
       </div>
 
+      {/* Enhanced Divider with Glow */}
+      <div style={{
+        width: '1px',
+        height: '100%',
+        background: 'linear-gradient(to bottom, transparent, var(--gradient-primary), transparent)',
+        boxShadow: '0 0 20px rgba(56, 189, 248, 0.3)',
+        position: 'relative'
+      }} />
+
       {/* Right Side: Knowledge Visualization */}
-      <div style={{ flex: 1, position: 'relative', overflow: 'hidden', backgroundColor: 'var(--bg-secondary)' }}>
+      <div style={{
+        flex: 1,
+        position: 'relative',
+        overflow: 'hidden',
+        background: 'var(--bg-secondary)'
+      }}>
         <KnowledgePool time={time} coins={coins} />
       </div>
 
